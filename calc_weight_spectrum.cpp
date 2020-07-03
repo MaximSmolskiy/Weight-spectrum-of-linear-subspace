@@ -7,10 +7,10 @@
 
 using namespace std;
 
-// Двоичный логарифм количества итераций параллельного цикла
+// Р”РІРѕРёС‡РЅС‹Р№ Р»РѕРіР°СЂРёС„Рј РєРѕР»РёС‡РµСЃС‚РІР° РёС‚РµСЂР°С†РёР№ РїР°СЂР°Р»Р»РµР»СЊРЅРѕРіРѕ С†РёРєР»Р°
 const size_t LOG_2_T = 7;
 
-// Считывание входных данных
+// РЎС‡РёС‚С‹РІР°РЅРёРµ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
 vector<string> read_input_data(const string &filename)
 {
   freopen(filename.c_str(), "r", stdin);
@@ -22,7 +22,7 @@ vector<string> read_input_data(const string &filename)
   return set_lines;
 }
 
-// Конвертация набора строк в порождающее множество векторов
+// РљРѕРЅРІРµСЂС‚Р°С†РёСЏ РЅР°Р±РѕСЂР° СЃС‚СЂРѕРє РІ РїРѕСЂРѕР¶РґР°СЋС‰РµРµ РјРЅРѕР¶РµСЃС‚РІРѕ РІРµРєС‚РѕСЂРѕРІ
 vector<vector<bool>> convert_set_lines_to_generating_set_vectors(const vector<string> &set_lines)
 {
   vector<vector<bool>> generating_set_vectors(set_lines.size(), vector<bool>(set_lines[0].size()));
@@ -32,7 +32,7 @@ vector<vector<bool>> convert_set_lines_to_generating_set_vectors(const vector<st
   return generating_set_vectors;
 }
 
-// Операция сложения по модулю 2 векторов (операция xor),
+// РћРїРµСЂР°С†РёСЏ СЃР»РѕР¶РµРЅРёСЏ РїРѕ РјРѕРґСѓР»СЋ 2 РІРµРєС‚РѕСЂРѕРІ (РѕРїРµСЂР°С†РёСЏ xor),
 vector<bool> operator^(const vector<bool> &vector_1, const vector<bool> &vector_2)
 {
   vector<bool> xor_vectors(vector_1.size());
@@ -41,7 +41,7 @@ vector<bool> operator^(const vector<bool> &vector_1, const vector<bool> &vector_
   return xor_vectors;
 }
 
-// Нахождение индексов единиц базисных векторов аналогом метода Гаусса - прямой и обратный ход
+// РќР°С…РѕР¶РґРµРЅРёРµ РёРЅРґРµРєСЃРѕРІ РµРґРёРЅРёС† Р±Р°Р·РёСЃРЅС‹С… РІРµРєС‚РѕСЂРѕРІ Р°РЅР°Р»РѕРіРѕРј РјРµС‚РѕРґР° Р“Р°СѓСЃСЃР° - РїСЂСЏРјРѕР№ Рё РѕР±СЂР°С‚РЅС‹Р№ С…РѕРґ
 vector<vector<size_t>> find_indices_1_basis_vectors(vector<vector<bool>> &generating_set_vectors, size_t K, size_t N)
 {
   vector<vector<bool>> set_basis_vectors(N, vector<bool>(N));
@@ -74,7 +74,7 @@ vector<vector<size_t>> find_indices_1_basis_vectors(vector<vector<bool>> &genera
   return indices_1_basis_vectors;
 }
 
-// Степень с основанием 2
+// РЎС‚РµРїРµРЅСЊ СЃ РѕСЃРЅРѕРІР°РЅРёРµРј 2
 unsigned long long power_2(size_t exponent)
 {
   unsigned long long power_2_exponent = 1;
@@ -83,7 +83,7 @@ unsigned long long power_2(size_t exponent)
   return power_2_exponent;
 }
 
-// Вычисление таблицы двоичного логарифма минус 1
+// Р’С‹С‡РёСЃР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РґРІРѕРёС‡РЅРѕРіРѕ Р»РѕРіР°СЂРёС„РјР° РјРёРЅСѓСЃ 1
 unordered_map<unsigned long long, size_t> calculate_log_2_table_minus_1()
 {
   unordered_map<unsigned long long, size_t> log_2_table_minus_1;
@@ -96,7 +96,7 @@ unordered_map<unsigned long long, size_t> calculate_log_2_table_minus_1()
   return log_2_table_minus_1;
 }
 
-// Нахождение частичного весового спектра
+// РќР°С…РѕР¶РґРµРЅРёРµ С‡Р°СЃС‚РёС‡РЅРѕРіРѕ РІРµСЃРѕРІРѕРіРѕ СЃРїРµРєС‚СЂР°
 vector<unsigned long long> find_partial_weight_spectrum(size_t N, int i, unsigned long long power_2_B_minus_log_2_T, const vector<vector<size_t>> &indices_1_basis_vectors, unordered_map<unsigned long long, size_t> &log_2_table_minus_1)
 {
   vector<unsigned long long> partial_weight_spectrum(N + 1);
@@ -129,7 +129,7 @@ vector<unsigned long long> find_partial_weight_spectrum(size_t N, int i, unsigne
   return partial_weight_spectrum;
 }
 
-// Нахождение весового спектра
+// РќР°С…РѕР¶РґРµРЅРёРµ РІРµСЃРѕРІРѕРіРѕ СЃРїРµРєС‚СЂР°
 vector<unsigned long long> find_weight_spectrum(size_t K, size_t N, size_t B, const vector<vector<size_t>> &indices_1_basis_vectors, unordered_map<unsigned long long, size_t> &log_2_table_minus_1)
 {
   size_t log_2_T = min(LOG_2_T, B), T = size_t(power_2(log_2_T));
@@ -151,7 +151,7 @@ vector<unsigned long long> find_weight_spectrum(size_t K, size_t N, size_t B, co
   return weight_spectrum;
 }
 
-// Запись выходных данных
+// Р—Р°РїРёСЃСЊ РІС‹С…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
 void write_output_data(const string &filename, const vector<unsigned long long> &weight_spectrum, size_t N)
 {
   freopen(filename.c_str(), "w", stdout);
