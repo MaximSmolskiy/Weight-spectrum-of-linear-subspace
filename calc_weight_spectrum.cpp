@@ -1,174 +1,185 @@
-#include <iostream>
+#include <bitset>
+#include <valarray>
 #include <vector>
+#include <thread>
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <algorithm>
-#include <unordered_map>
-#include <omp.h>
 
 using namespace std;
 
-// Двоичный логарифм количества итераций параллельного цикла
-const size_t LOG_2_T = 7;
+using ull_t = unsigned long long;
 
-// Считывание входных данных
-vector<string> read_input_data(const string &filename)
-{
-  freopen(filename.c_str(), "r", stdin);
-  vector<string> set_lines;
-  string line;
-  while (cin >> line)
-    set_lines.push_back(line);
-  fclose(stdin);
-  return set_lines;
+static size_t constexpr SIZE_BL = sizeof(uintptr_t) << 3;
+using bl_t = bitset<SIZE_BL>;
+using vec_t = valarray<bl_t>;
+using set_vec_t = vector<vec_t>;
+
+using weig_spec_t = valarray<ull_t>;
+using set_weig_spec_t = vector<weig_spec_t>;
+
+using set_thr_t = vector<thread>;
+
+static size_t const LOG_2_DEF_NUM_THR = 3;
+
+void report_error(string const &mes) {
+    cerr << mes << ".\n";
+    exit(EXIT_FAILURE);
 }
 
-// Конвертация набора строк в порождающее множество векторов
-vector<vector<bool>> convert_set_lines_to_generating_set_vectors(const vector<string> &set_lines)
+set_vec_t calc_set_bas_vec(string const &name_file, size_t &K, size_t &N)
 {
-  vector<vector<bool>> generating_set_vectors(set_lines.size(), vector<bool>(set_lines[0].size()));
-  for (size_t i = 0; i < set_lines.size(); i++)
-    for (size_t j = 0; j < set_lines[i].size(); j++)
-      generating_set_vectors[i][j] = set_lines[i][j] == '1';
-  return generating_set_vectors;
-}
+    ifstream inp(name_file);
 
-// Операция сложения по модулю 2 векторов (операция xor),
-vector<bool> operator^(const vector<bool> &vector_1, const vector<bool> &vector_2)
-{
-  vector<bool> xor_vectors(vector_1.size());
-  for (size_t i = 0; i < xor_vectors.size(); i++)
-    xor_vectors[i] = vector_1[i] != vector_2[i];
-  return xor_vectors;
-}
+    if (!inp.is_open()) {
+        report_error("Can't open input file \"" + name_file + '\"');
+    }
 
-// Нахождение индексов единиц базисных векторов аналогом метода Гаусса - прямой и обратный ход
-vector<vector<size_t>> find_indices_1_basis_vectors(vector<vector<bool>> &generating_set_vectors, size_t K, size_t N)
-{
-  vector<vector<bool>> set_basis_vectors(N, vector<bool>(N));
-  vector<bool> presence_basis_vectors(N);
-  for (size_t i = 0; i < K; i++)
-    for (size_t j = 0; j < N; j++)
-      if (generating_set_vectors[i][j])
-        if (presence_basis_vectors[j])
-          generating_set_vectors[i] = generating_set_vectors[i] ^ set_basis_vectors[j];
-        else
-        {
-          set_basis_vectors[j] = generating_set_vectors[i];
-          presence_basis_vectors[j] = true;
-          break;
+    set_vec_t mat_bas_vec;
+    size_t num_bas_vec = 0;
+    string line;
+    bool is_first_line = true;
+    while (getline(inp, line)) {
+        if (!is_first_line && line.length() != N) {
+            report_error("In input file \"" + name_file + "\" strings have different lengths");
         }
-  for (size_t i = N - 1; i != SIZE_MAX; i--)
-    if (presence_basis_vectors[i])
-      for (size_t j = N - 1; j != SIZE_MAX; j--)
-        if (i != j && set_basis_vectors[i][j] && presence_basis_vectors[j])
-          set_basis_vectors[i] = set_basis_vectors[i] ^ set_basis_vectors[j];
-  vector<vector<size_t>> indices_1_basis_vectors;
-  for (size_t i = 0; i < N; i++)
-    if (presence_basis_vectors[i])
-    {
-      indices_1_basis_vectors.push_back(vector<size_t>());
-      for (size_t j = 0; j < N; j++)
-        if (set_basis_vectors[i][j])
-          indices_1_basis_vectors.back().push_back(j);
+
+        if (line.find_first_not_of("01\r\n") != string::npos) {
+            report_error("In input file \"" + name_file + "\" string \"" + line + "\" has unallowed character");
+        }
+
+        N = line.length();
+        is_first_line = false;
+        K++;
+
+        vec_t vec((N + SIZE_BL - 1) / SIZE_BL);
+        for (size_t i = 0; i < N; i++) {
+            vec[i / SIZE_BL][i % SIZE_BL] = line[i] == '1';
+        }
+
+        mat_bas_vec.resize(N);
+        for (size_t i = 0; i < N; i++) {
+            if (vec[i / SIZE_BL][i % SIZE_BL]) {
+                if (mat_bas_vec[i].size()) {
+                    vec ^= mat_bas_vec[i];
+                } else {
+                    mat_bas_vec[i] = vec;
+                    num_bas_vec++;
+                    break;
+                }
+            }
+        }
     }
-  return indices_1_basis_vectors;
-}
 
-// Степень с основанием 2
-unsigned long long power_2(size_t exponent)
-{
-  unsigned long long power_2_exponent = 1;
-  for (size_t i = 0; i < exponent; i++)
-    power_2_exponent *= 2;
-  return power_2_exponent;
-}
-
-// Вычисление таблицы двоичного логарифма минус 1
-unordered_map<unsigned long long, size_t> calculate_log_2_table_minus_1()
-{
-  unordered_map<unsigned long long, size_t> log_2_table_minus_1;
-  unsigned long long power_2_i = 2;
-  for (size_t i = 1; i < 64; i++)
-  {
-    log_2_table_minus_1[power_2_i] = i - 1;
-    power_2_i *= 2;
-  }
-  return log_2_table_minus_1;
-}
-
-// Нахождение частичного весового спектра
-vector<unsigned long long> find_partial_weight_spectrum(size_t N, int i, unsigned long long power_2_B_minus_log_2_T, const vector<vector<size_t>> &indices_1_basis_vectors, unordered_map<unsigned long long, size_t> &log_2_table_minus_1)
-{
-  vector<unsigned long long> partial_weight_spectrum(N + 1);
-  vector<bool> binary_vector(N);
-  size_t weight_vector = 0;
-  unsigned long long first_combination = i * power_2_B_minus_log_2_T, first_Gray_code = first_combination ^ (first_combination >> 1);
-  for (size_t j = 0; first_Gray_code > 0; first_Gray_code /= 2, j++)
-    if (first_Gray_code % 2 == 1)
-    {
-      size_t weight_changed_0 = 0;
-      for (size_t k = 0; k < indices_1_basis_vectors[j].size(); k++)
-      {
-        binary_vector[indices_1_basis_vectors[j][k]] = !binary_vector[indices_1_basis_vectors[j][k]];
-        weight_changed_0 += binary_vector[indices_1_basis_vectors[j][k]];
-      }
-      weight_vector += 2 * weight_changed_0 - indices_1_basis_vectors[j].size();
+    if (!N) {
+        report_error("Input file \"" + name_file + "\" is empty");
     }
-  partial_weight_spectrum[weight_vector]++;
-  for (unsigned long long j = first_combination; j < first_combination + power_2_B_minus_log_2_T - 1; j++)
-  {
-    size_t index_basis_vector = log_2_table_minus_1[(j ^ (j + 1)) + 1], weight_changed_0 = 0;
-    for (size_t k = 0; k < indices_1_basis_vectors[index_basis_vector].size(); k++)
-    {
-      binary_vector[indices_1_basis_vectors[index_basis_vector][k]] = !binary_vector[indices_1_basis_vectors[index_basis_vector][k]];
-      weight_changed_0 += binary_vector[indices_1_basis_vectors[index_basis_vector][k]];
+
+    set_vec_t set_bas_vec(num_bas_vec);
+    size_t i = 0;
+    for (auto const &vec : mat_bas_vec) {
+        if (vec.size()) {
+            set_bas_vec[i] = vec;
+            i++;
+        }
     }
-    weight_vector += 2 * weight_changed_0 - indices_1_basis_vectors[index_basis_vector].size();
-    partial_weight_spectrum[weight_vector]++;
-  }
-  return partial_weight_spectrum;
+
+    return set_bas_vec;
 }
 
-// Нахождение весового спектра
-vector<unsigned long long> find_weight_spectrum(size_t K, size_t N, size_t B, const vector<vector<size_t>> &indices_1_basis_vectors, unordered_map<unsigned long long, size_t> &log_2_table_minus_1)
-{
-  size_t log_2_T = min(LOG_2_T, B), T = size_t(power_2(log_2_T));
-  unsigned long long power_2_B_minus_log_2_T = power_2(B - log_2_T);
-  vector<vector<unsigned long long>> partial_weight_spectra(T);
-#pragma omp parallel
-  {
-#pragma omp for
-    for (int i = 0; i < int(T); i++)
-      partial_weight_spectra[i] = find_partial_weight_spectrum(N, i, power_2_B_minus_log_2_T, indices_1_basis_vectors, log_2_table_minus_1);
-  }
-  vector<unsigned long long> weight_spectrum(N + 1);
-  for (size_t i = 0; i < T; i++)
-    for (size_t j = 0; j <= N; j++)
-      weight_spectrum[j] += partial_weight_spectra[i][j];
-  unsigned long long power_2_K_minus_B = power_2(K - B);
-  for (size_t i = 0; i <= N; i++)
-    weight_spectrum[i] *= power_2_K_minus_B;
-  return weight_spectrum;
+weig_spec_t calc_full_bas_weig_spec(size_t N) {
+    weig_spec_t full_bas_weig_spec(N + 1);
+    full_bas_weig_spec[0] = 1;
+    for (size_t i = 1; i <= N; i++) {
+        full_bas_weig_spec[i] = full_bas_weig_spec[i - 1] * (N - i + 1) / i;
+    }
+    return full_bas_weig_spec;
 }
 
-// Запись выходных данных
-void write_output_data(const string &filename, const vector<unsigned long long> &weight_spectrum, size_t N)
-{
-  freopen(filename.c_str(), "w", stdout);
-  for (size_t i = 0; i <= N; i++)
-    cout << i << '\t' << weight_spectrum[i] << '\n';
-  fclose(stdout);
+size_t calc_weig_vec(vec_t const &vec) {
+    size_t weig_vec = 0;
+    for (auto const &bl : vec) {
+        weig_vec += bl.count();
+    }
+    return weig_vec;
 }
 
-int main()
-{
-  vector<string> set_lines = read_input_data("example/input.txt");
-  vector<vector<bool>> generating_set_vectors = convert_set_lines_to_generating_set_vectors(set_lines);
-  size_t K = generating_set_vectors.size(), N = generating_set_vectors[0].size();
-  vector<vector<size_t>> indices_1_basis_vectors = find_indices_1_basis_vectors(generating_set_vectors, K, N);
-  size_t B = indices_1_basis_vectors.size();
-  unordered_map<unsigned long long, size_t> log_2_table_minus_1 = calculate_log_2_table_minus_1();
-  vector<unsigned long long> weight_spectrum = find_weight_spectrum(K, N, B, indices_1_basis_vectors, log_2_table_minus_1);
-  write_output_data("example/output.txt", weight_spectrum, N);
-  return 0;
+size_t calc_ind_bas_vec(ull_t comb) {
+    comb ^= comb + 1;
+    size_t ind_bas_vec = 0;
+    while (comb) {
+        comb &= comb - 1;
+        ind_bas_vec++;
+    }
+    return ind_bas_vec - 1;
+}
+
+void calc_part_bas_weig_spec(size_t i, set_vec_t const &set_bas_vec, weig_spec_t &part_bas_weig_spec) {
+    vec_t vec(set_bas_vec[0].size());
+    size_t log_2_num_thr = min(LOG_2_DEF_NUM_THR, set_bas_vec.size());
+    ull_t init_comb = i * (1ULL << (set_bas_vec.size() - log_2_num_thr));
+    ull_t init_code_Gray = init_comb ^ (init_comb >> 1);
+    size_t j = 0;
+    while (init_code_Gray) {
+        if (init_code_Gray & 1) {
+            vec ^= set_bas_vec[j];
+        }
+        j++;
+        init_code_Gray >>= 1;
+    }
+    part_bas_weig_spec[calc_weig_vec(vec)]++;
+
+    for (ull_t comb = init_comb; comb < init_comb + (1ULL << (set_bas_vec.size() - log_2_num_thr)) - 1; comb++) {
+        vec ^= set_bas_vec[calc_ind_bas_vec(comb)];
+        part_bas_weig_spec[calc_weig_vec(vec)]++;
+    }
+}
+
+weig_spec_t calc_weig_spec(set_vec_t const &set_bas_vec, size_t K, size_t N) {
+    weig_spec_t bas_weig_spec(N + 1);
+
+    if (set_bas_vec.size() == N) {
+        bas_weig_spec = calc_full_bas_weig_spec(N);
+    } else {
+        size_t log_2_num_thr = min(LOG_2_DEF_NUM_THR, set_bas_vec.size());
+        size_t num_thr = size_t(1) << log_2_num_thr;
+        set_thr_t set_thr(num_thr);
+        set_weig_spec_t set_part_bas_weig_spec(num_thr, weig_spec_t(N + 1));
+        for (size_t i = 0; i < num_thr; i++) {
+            set_thr[i] = thread(calc_part_bas_weig_spec, i, cref(set_bas_vec), ref(set_part_bas_weig_spec[i]));
+        }
+
+        for (size_t i = 0; i < num_thr; i++) {
+            set_thr[i].join();
+            bas_weig_spec += set_part_bas_weig_spec[i];
+        }
+    }
+
+    return bas_weig_spec * (1ULL << (K - set_bas_vec.size()));
+}
+
+void write_weig_spec(string const &name_file, weig_spec_t const &weig_spec) {
+    ofstream out(name_file);
+
+    if (!out.is_open()) {
+        report_error("Can't open output file \"" + name_file + '\"');
+    }
+
+    for (size_t i = 0; i < weig_spec.size(); i++)
+        out << i << '\t' << weig_spec[i] << '\n';
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        report_error("Wrong number of arguments - expected 3, found " + to_string(argc));
+    }
+
+    size_t K = 0;
+    size_t N = 0;
+    set_vec_t set_bas_vec = calc_set_bas_vec(argv[1], K, N);
+    weig_spec_t weig_spec = calc_weig_spec(set_bas_vec, K, N);
+    write_weig_spec(argv[2], weig_spec);
+
+    return EXIT_SUCCESS;
 }
