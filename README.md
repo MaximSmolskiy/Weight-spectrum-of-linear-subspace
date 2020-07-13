@@ -44,11 +44,23 @@ d. Весом вектора назовём количество единичн�
 
 ## Идея решения
 
-1. Вычисление ![](https://latex.codecogs.com/svg.latex?B&space;\leqslant&space;\min&space;\\{&space;K,&space;N&space;\\}) базисных (линейно независимых) векторов прямым ходом аналога метода Гаусса.
+1. 1. Вычисление множества из ![](https://latex.codecogs.com/svg.latex?B&space;\leqslant&space;\min&space;\\{&space;K,&space;N&space;\\}) базисных (линейно независимых) векторов.
+
+   2. 1. Построчное считывание входного файла.
+
+      2. Проверка строки на наличие ошибок.
+
+      3. Конвертация строки в вектор.
+
+      4. Добавление вектора в матрицу базисных векторов, если он является базисным - реализация прямого хода аналога метода Гаусса.
+
+   3. Конвертация матрицы в множество базисных векторов.
+
+   4. Исключение нулевых столбцов.
 
 2. 1. Если ![](https://latex.codecogs.com/svg.latex?B&space;=&space;N), то вычисление полного базисного весового спектра ![](https://latex.codecogs.com/svg.latex?\\{&space;C_N^i&space;\mid&space;i&space;\in&space;0..N&space;\\}), где ![](https://latex.codecogs.com/svg.latex?C_N^i) - биномиальный коэффициент из ![](https://latex.codecogs.com/svg.latex?N) по ![](https://latex.codecogs.com/svg.latex?i).
 
-   2. Если ![](https://latex.codecogs.com/svg.latex?B&space;\neq&space;N), то вычисление базисного весового спектра, используя код Грея.
+   2. Если ![](https://latex.codecogs.com/svg.latex?B&space;\neq&space;N), то вычисление базисного весового спектра - использование кода Грея.
 
 3. Вычисление весового спектра - произведения базисного весового спектра и ![](https://latex.codecogs.com/svg.latex?2&space;^&space;{K&space;-&space;B}).
 
@@ -60,21 +72,17 @@ d. Весом вектора назовём количество единичн�
 
 1. ![](https://latex.codecogs.com/svg.latex?O&space;(K&space;\cdot&space;N&space;^&space;2)).
 
-2. 1. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
-
-   2. ![](https://latex.codecogs.com/svg.latex?O&space;(2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;\Big(&space;N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}}&space;\Big)).
+2. ![](https://latex.codecogs.com/svg.latex?O&space;(2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;(N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}})).
 
 3. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
 
-Итого - ![](https://latex.codecogs.com/svg.latex?O&space;(K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;\Big(&space;K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}}&space;\Big)).
+Итого - ![](https://latex.codecogs.com/svg.latex?O&space;(K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;(K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}})).
 
 #### Память
 
 1. ![](https://latex.codecogs.com/svg.latex?O&space;(N&space;^&space;2)).
 
-2. 1. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
-
-   2. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
+2. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
 
 3. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
 
