@@ -18,19 +18,19 @@
 
 ## Задание
 
-a. Назовём вектором строку битов (значения ![](https://latex.codecogs.com/svg.latex?0) или ![](https://latex.codecogs.com/svg.latex?1)) фиксированной длины ![](https://latex.codecogs.com/svg.latex?N): то есть, всего возможно ![](https://latex.codecogs.com/svg.latex?2&space;^&space;N) различных векторов
+a. Назовём вектором строку битов (значения <img src="https://render.githubusercontent.com/render/math?math=0"> или <img src="https://render.githubusercontent.com/render/math?math=1">) фиксированной длины <img src="https://render.githubusercontent.com/render/math?math=N">: то есть, всего возможно <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20N"> различных векторов
 
-b. Введём операцию сложения по модулю ![](https://latex.codecogs.com/svg.latex?2) векторов (операция ![](https://latex.codecogs.com/svg.latex?\texttt{xor})), которая по двум векторам ![](https://latex.codecogs.com/svg.latex?a) и ![](https://latex.codecogs.com/svg.latex?b) получает вектор ![](https://latex.codecogs.com/svg.latex?a&space;&plus;&space;b) той же длины ![](https://latex.codecogs.com/svg.latex?N)
+b. Введём операцию сложения по модулю <img src="https://render.githubusercontent.com/render/math?math=2"> векторов (операция <img src="https://render.githubusercontent.com/render/math?math=%5Ctexttt%7Bxor%7D">), которая по двум векторам <img src="https://render.githubusercontent.com/render/math?math=a"> и <img src="https://render.githubusercontent.com/render/math?math=b"> получает вектор <img src="https://render.githubusercontent.com/render/math?math=a%20%2B%20b"> той же длины <img src="https://render.githubusercontent.com/render/math?math=N">
 
-c. Пусть задано множество ![](https://latex.codecogs.com/svg.latex?A&space;=&space;\\{&space;a_i&space;\mid&space;i&space;\in&space;1..K&space;\\}) из ![](https://latex.codecogs.com/svg.latex?0&space;\leqslant&space;K&space;\leqslant&space;2&space;^&space;N) векторов. Назовём его порождающим: при помощи сложения ![](https://latex.codecogs.com/svg.latex?a_i) множества ![](https://latex.codecogs.com/svg.latex?A) можно получить ![](https://latex.codecogs.com/svg.latex?2&space;^&space;K) векторов вида ![](https://latex.codecogs.com/svg.latex?\sum_{i&space;=&space;1}^K&space;\beta_i&space;a_i), где ![](https://latex.codecogs.com/svg.latex?\beta_i) равно либо ![](https://latex.codecogs.com/svg.latex?0), либо ![](https://latex.codecogs.com/svg.latex?1)
+c. Пусть задано множество <img src="https://render.githubusercontent.com/render/math?math=A%20%3D%20%5C%7B%20a_i%20%5Cmid%20i%20%5Cin%201..K%20%5C%7D"> из <img src="https://render.githubusercontent.com/render/math?math=0%20%5Cleqslant%20K%20%5Cleqslant%202%20%5E%20N"> векторов. Назовём его порождающим: при помощи сложения <img src="https://render.githubusercontent.com/render/math?math=a_i"> множества <img src="https://render.githubusercontent.com/render/math?math=A"> можно получить <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20K"> векторов вида <img src="https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle%20%5Csum_%7Bi%20%3D%201%7D%5EK%20%5Cbeta_i%20a_i">, где <img src="https://render.githubusercontent.com/render/math?math=%5Cbeta_i"> равно либо <img src="https://render.githubusercontent.com/render/math?math=0">, либо <img src="https://render.githubusercontent.com/render/math?math=1">
 
-d. Весом вектора назовём количество единичных (ненулевых) битов в векторе: то есть, вес – это натуральное число от ![](https://latex.codecogs.com/svg.latex?0) до ![](https://latex.codecogs.com/svg.latex?N)
+d. Весом вектора назовём количество единичных (ненулевых) битов в векторе: то есть, вес – это натуральное число от <img src="https://render.githubusercontent.com/render/math?math=0"> до <img src="https://render.githubusercontent.com/render/math?math=N">
 
-Требуется для заданных порождающего множества векторов и числа ![](https://latex.codecogs.com/svg.latex?N) построить гистограмму (спектр) количества различных векторов по их весу.
+Требуется для заданных порождающего множества векторов и числа <img src="https://render.githubusercontent.com/render/math?math=N"> построить гистограмму (спектр) количества различных векторов по их весу.
 
 ### Формат входных данных
 
-Текстовый файл из набора строк одинаковой длины по одному вектору в строке (символы ![](https://latex.codecogs.com/svg.latex?0) или ![](https://latex.codecogs.com/svg.latex?1) без разделителей).
+Текстовый файл из набора строк одинаковой длины по одному вектору в строке (символы <img src="https://render.githubusercontent.com/render/math?math=0"> или <img src="https://render.githubusercontent.com/render/math?math=1"> без разделителей).
 
 ### Формат выходных данных
 
@@ -44,7 +44,7 @@ d. Весом вектора назовём количество единичн�
 
 ## Идея решения
 
-1. 1. Вычисление множества из ![](https://latex.codecogs.com/svg.latex?B&space;\leqslant&space;\min&space;\\{&space;K,&space;N&space;\\}) базисных (линейно независимых) векторов.
+1. 1. Вычисление множества из <img src="https://render.githubusercontent.com/render/math?math=B%20%5Cleqslant%20%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D"> базисных (линейно независимых) векторов.
 
    2. 1. Построчное считывание входного файла.
 
@@ -58,11 +58,11 @@ d. Весом вектора назовём количество единичн�
 
    4. Исключение нулевых столбцов.
 
-2. 1. Если ![](https://latex.codecogs.com/svg.latex?B&space;=&space;N), то вычисление полного базисного весового спектра ![](https://latex.codecogs.com/svg.latex?\\{&space;C_N^i&space;\mid&space;i&space;\in&space;0..N&space;\\}), где ![](https://latex.codecogs.com/svg.latex?C_N^i) - биномиальный коэффициент из ![](https://latex.codecogs.com/svg.latex?N) по ![](https://latex.codecogs.com/svg.latex?i).
+2. 1. Если <img src="https://render.githubusercontent.com/render/math?math=B%20%3D%20N">, то вычисление полного базисного весового спектра <img src="https://render.githubusercontent.com/render/math?math=%5C%7B%20C_N%5Ei%20%5Cmid%20i%20%5Cin%200..N%20%5C%7D">, где <img src="https://render.githubusercontent.com/render/math?math=C_N%5Ei"> - биномиальный коэффициент из <img src="https://render.githubusercontent.com/render/math?math=N"> по <img src="https://render.githubusercontent.com/render/math?math=i">.
 
-   2. Если ![](https://latex.codecogs.com/svg.latex?B&space;\neq&space;N), то вычисление базисного весового спектра - использование кода Грея.
+   2. Если <img src="https://render.githubusercontent.com/render/math?math=B%20%5Cneq%20N">, то вычисление базисного весового спектра - использование кода Грея.
 
-3. Вычисление весового спектра - произведения базисного весового спектра и ![](https://latex.codecogs.com/svg.latex?2&space;^&space;{K&space;-&space;B}).
+3. Вычисление весового спектра - произведения базисного весового спектра и <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20%7BK%20-%20B%7D">.
 
 ## Реализация
 
@@ -70,20 +70,20 @@ d. Весом вектора назовём количество единичн�
 
 #### Время
 
-1. ![](https://latex.codecogs.com/svg.latex?O&space;(K&space;\cdot&space;N&space;^&space;2)).
+1. <img src="https://render.githubusercontent.com/render/math?math=O%20(K%20%5Ccdot%20N%20%5E%202)">.
 
-2. ![](https://latex.codecogs.com/svg.latex?O&space;(2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;(N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}})).
+2. <img src="https://render.githubusercontent.com/render/math?math=O%20(2%20%5E%20B%20%5Ccdot%20N)%20%3D%20O%20(N%20%5Ccdot%202%20%5E%7B%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D%7D)">.
 
-3. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
+3. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
 
-Итого - ![](https://latex.codecogs.com/svg.latex?O&space;(K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;2&space;^&space;B&space;\cdot&space;N)&space;=&space;O&space;(K&space;\cdot&space;N&space;^&space;2&space;&plus;&space;N&space;\cdot&space;2&space;^&space;{\min&space;\\{&space;K,&space;N&space;\\}})).
+Итого - <img src="https://render.githubusercontent.com/render/math?math=O%20(K%20%5Ccdot%20N%20%5E%202%20%2B%202%20%5E%20B%20%5Ccdot%20N)%20%3D%20O%20(K%20%5Ccdot%20N%20%5E%202%20%2B%20N%20%5Ccdot%202%20%5E%20%7B%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D%7D)">.
 
 #### Память
 
-1. ![](https://latex.codecogs.com/svg.latex?O&space;(N&space;^&space;2)).
+1. <img src="https://render.githubusercontent.com/render/math?math=O%20(N%20%5E%202)">.
 
-2. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
+2. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
 
-3. ![](https://latex.codecogs.com/svg.latex?O&space;(N)).
+3. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
 
-Итого - ![](https://latex.codecogs.com/svg.latex?O&space;(N&space;^&space;2)).
+Итого - <img src="https://render.githubusercontent.com/render/math?math=O%20(N%20%5E%202)">.
