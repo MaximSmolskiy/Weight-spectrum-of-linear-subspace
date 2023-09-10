@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <bit>
 #include <iostream>
 
 using namespace std;
@@ -165,12 +166,7 @@ weig_spec_type calc_full_bas_weig_spec(size_t N) {
 // Вычисляет индекс меняющегося бита в (i + 1)-ом коде Грея - количество единичных битов в числе (i xor (i + 1)) без единицы.
 size_t calc_ind_ch_bit_next_code_Gray(ull_type ind_code_Gray) {
     ull_type num = ind_code_Gray ^ (ind_code_Gray + 1);
-    size_t num_1_bit_num = 0;
-    while (num) {
-        num &= num - 1;
-        ++num_1_bit_num;
-    }
-    return num_1_bit_num - 1;
+    return popcount(num) - 1;
 }
 
 // Вычисляет частичный базисный весовой спектр, используя код Грея.
