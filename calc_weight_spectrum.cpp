@@ -1,3 +1,4 @@
+#include <climits>
 #include <bitset>
 #include <valarray>
 #include <vector>
@@ -44,11 +45,11 @@ bit_bl_type acc_i_bit(vec_type &vec, size_t i) {
 // Проверяет входную строку на наличие ошибок.
 void check_line(string const &line, size_t N, string const &name_inp_file) {
     if (line.length() != N) {
-        throw exception(("In input file \"" + name_inp_file + "\" strings have different lengths").c_str());
+        throw invalid_argument("In input file \"" + name_inp_file + "\" strings have different lengths");
     }
 
     if (line.find_first_not_of("01\r\n") != string::npos) {
-        throw exception(("In input file \"" + name_inp_file + "\" string \"" + line + "\" has unallowed character").c_str());
+        throw domain_error("In input file \"" + name_inp_file + "\" string \"" + line + "\" has unallowed character");
     }
 }
 
@@ -97,7 +98,7 @@ set_vec_type calc_set_bas_vec(string const &name_inp_file, size_t &N, size_t &K)
     ifstream inp_file(name_inp_file);
 
     if (!inp_file.is_open()) {
-        throw exception(("Can't open input file \"" + name_inp_file + '\"').c_str());
+        throw invalid_argument("Can't open input file \"" + name_inp_file + '\"');
     }
 
     string line;
@@ -119,7 +120,7 @@ set_vec_type calc_set_bas_vec(string const &name_inp_file, size_t &N, size_t &K)
     }
 
     if (!N) {
-        throw exception(("Input file \"" + name_inp_file + "\" is empty").c_str());
+        throw invalid_argument("Input file \"" + name_inp_file + "\" is empty");
     }
 
     set_vec_type set_bas_vec;
@@ -232,7 +233,7 @@ void write_weig_spec(string const &name_out_file, weig_spec_type const &weig_spe
     ofstream out_file(name_out_file);
 
     if (!out_file.is_open()) {
-        throw exception(("Can't open output file \"" + name_out_file + '\"').c_str());
+        throw invalid_argument("Can't open output file \"" + name_out_file + '\"');
     }
 
     for (size_t weig = 0; weig < weig_spec.size(); ++weig)
@@ -243,7 +244,7 @@ void write_weig_spec(string const &name_out_file, weig_spec_type const &weig_spe
 int main(int argc, char *argv[]) {
     try {
         if (argc != 3) {
-            throw exception(("Wrong number of arguments - expected 3, found " + to_string(argc)).c_str());
+            throw invalid_argument("Wrong number of arguments - expected 3, found " + to_string(argc));
         }
 
         size_t N, K;
