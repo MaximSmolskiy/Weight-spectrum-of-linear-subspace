@@ -18,19 +18,19 @@
 
 ## Задание
 
-a. Назовём вектором строку битов (значения <img src="https://render.githubusercontent.com/render/math?math=0"> или <img src="https://render.githubusercontent.com/render/math?math=1">) фиксированной длины <img src="https://render.githubusercontent.com/render/math?math=N">: то есть, всего возможно <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20N"> различных векторов
+a. Назовём вектором строку битов (значения $0$ или $1$) фиксированной длины $N$: то есть, всего возможно $2 ^ N$ различных векторов
 
-b. Введём операцию сложения по модулю <img src="https://render.githubusercontent.com/render/math?math=2"> векторов (операция <img src="https://render.githubusercontent.com/render/math?math=%5Ctexttt%7Bxor%7D">), которая по двум векторам <img src="https://render.githubusercontent.com/render/math?math=a"> и <img src="https://render.githubusercontent.com/render/math?math=b"> получает вектор <img src="https://render.githubusercontent.com/render/math?math=a%20%2B%20b"> той же длины <img src="https://render.githubusercontent.com/render/math?math=N">
+b. Введём операцию сложения по модулю $2$ векторов (операция $\texttt{xor}$), которая по двум векторам $a$ и $b$ получает вектор $a + b$ той же длины $N$
 
-c. Пусть задано множество <img src="https://render.githubusercontent.com/render/math?math=A%20%3D%20%5C%7B%20a_i%20%5Cmid%20i%20%5Cin%201..K%20%5C%7D"> из <img src="https://render.githubusercontent.com/render/math?math=0%20%5Cleqslant%20K%20%5Cleqslant%202%20%5E%20N"> векторов. Назовём его порождающим: при помощи сложения <img src="https://render.githubusercontent.com/render/math?math=a_i"> множества <img src="https://render.githubusercontent.com/render/math?math=A"> можно получить <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20K"> векторов вида <img src="https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle%20%5Csum_%7Bi%20%3D%201%7D%5EK%20%5Cbeta_i%20a_i">, где <img src="https://render.githubusercontent.com/render/math?math=%5Cbeta_i"> равно либо <img src="https://render.githubusercontent.com/render/math?math=0">, либо <img src="https://render.githubusercontent.com/render/math?math=1">
+c. Пусть задано множество $A = \\{ a_i \mid i \in 1..K \\}$ из $0 \leqslant K \leqslant 2 ^ N$ векторов. Назовём его порождающим: при помощи сложения $a_i$ множества $A$ можно получить $2 ^ K$ векторов вида $\displaystyle \sum_{i = 1}^K \beta_i a_i$, где $\beta_i$ равно либо $0$, либо $1$
 
-d. Весом вектора назовём количество единичных (ненулевых) битов в векторе: то есть, вес – это натуральное число от <img src="https://render.githubusercontent.com/render/math?math=0"> до <img src="https://render.githubusercontent.com/render/math?math=N">
+d. Весом вектора назовём количество единичных (ненулевых) битов в векторе: то есть, вес – это натуральное число от $0$ до $N$
 
-Требуется для заданных порождающего множества векторов и числа <img src="https://render.githubusercontent.com/render/math?math=N"> построить гистограмму (спектр) количества различных векторов по их весу.
+Требуется для заданных порождающего множества векторов и числа $N$ построить гистограмму (спектр) количества различных векторов по их весу.
 
 ### Формат входных данных
 
-Текстовый файл из набора строк одинаковой длины по одному вектору в строке (символы <img src="https://render.githubusercontent.com/render/math?math=0"> или <img src="https://render.githubusercontent.com/render/math?math=1"> без разделителей).
+Текстовый файл из набора строк одинаковой длины по одному вектору в строке (символы $0$ или $1$ без разделителей).
 
 ### Формат выходных данных
 
@@ -44,7 +44,7 @@ d. Весом вектора назовём количество единичн�
 
 ## Идея решения
 
-1. 1. Вычисление множества из <img src="https://render.githubusercontent.com/render/math?math=B%20%5Cleqslant%20%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D"> базисных (линейно независимых) векторов.
+1. 1. Вычисление множества из $B \leqslant \min \\{ K, N \\}$ базисных (линейно независимых) векторов.
 
    2. 1. Построчное считывание входного файла.
 
@@ -58,11 +58,11 @@ d. Весом вектора назовём количество единичн�
 
    4. Исключение нулевых столбцов.
 
-2. 1. Если <img src="https://render.githubusercontent.com/render/math?math=B%20%3D%20N">, то вычисление полного базисного весового спектра <img src="https://render.githubusercontent.com/render/math?math=%5C%7B%20C_N%5Ei%20%5Cmid%20i%20%5Cin%200..N%20%5C%7D">, где <img src="https://render.githubusercontent.com/render/math?math=C_N%5Ei"> - биномиальный коэффициент из <img src="https://render.githubusercontent.com/render/math?math=N"> по <img src="https://render.githubusercontent.com/render/math?math=i">.
+2. 1. Если $B = N$, то вычисление полного базисного весового спектра $\\{ C_N^i \mid i \in 0..N \\}$, где $C_N^i$ - биномиальный коэффициент из $N$ по $i$.
 
-   2. Если <img src="https://render.githubusercontent.com/render/math?math=B%20%5Cneq%20N">, то вычисление базисного весового спектра - использование кода Грея.
+   2. Если $B \neq N$, то вычисление базисного весового спектра - использование кода Грея.
 
-3. Вычисление весового спектра - произведения базисного весового спектра и <img src="https://render.githubusercontent.com/render/math?math=2%20%5E%20%7BK%20-%20B%7D">.
+3. Вычисление весового спектра - произведения базисного весового спектра и $2 ^ {K - B}$.
 
 ## Реализация
 
@@ -70,20 +70,20 @@ d. Весом вектора назовём количество единичн�
 
 #### Время
 
-1. <img src="https://render.githubusercontent.com/render/math?math=O%20(K%20%5Ccdot%20N%20%5E%202)">.
+1. $O (K \cdot N ^ 2)$.
 
-2. <img src="https://render.githubusercontent.com/render/math?math=O%20(2%20%5E%20B%20%5Ccdot%20N)%20%3D%20O%20(N%20%5Ccdot%202%20%5E%7B%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D%7D)">.
+2. $O (2 ^ B \cdot N) = O (N \cdot 2 ^{\min \\{ K, N \\}})$.
 
-3. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
+3. $O (N)$.
 
-Итого - <img src="https://render.githubusercontent.com/render/math?math=O%20(K%20%5Ccdot%20N%20%5E%202%20%2B%202%20%5E%20B%20%5Ccdot%20N)%20%3D%20O%20(K%20%5Ccdot%20N%20%5E%202%20%2B%20N%20%5Ccdot%202%20%5E%20%7B%5Cmin%20%5C%7B%20K%2C%20N%20%5C%7D%7D)">.
+Итого - $O (K \cdot N ^ 2 + 2 ^ B \cdot N) = O (K \cdot N ^ 2 + N \cdot 2 ^ {\min \\{ K, N \\}})$.
 
 #### Память
 
-1. <img src="https://render.githubusercontent.com/render/math?math=O%20(N%20%5E%202)">.
+1. $O (N ^ 2)$.
 
-2. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
+2. $O (N)$.
 
-3. <img src="https://render.githubusercontent.com/render/math?math=O%20(N)">.
+3. $O (N)$.
 
-Итого - <img src="https://render.githubusercontent.com/render/math?math=O%20(N%20%5E%202)">.
+Итого - $O (N ^ 2)$.
